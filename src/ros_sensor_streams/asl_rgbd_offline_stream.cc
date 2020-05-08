@@ -211,9 +211,10 @@ void ASLRGBDOfflineStream::get(uint32_t* id, double* time,
     ROS_ERROR("No more data!\n");
     return;
   }
-
+  // ROS_INFO("here?");
   *id = curr_idx_;
   *time = static_cast<double>(rgb_data_[rgb_idxs_[curr_idx_]].timestamp) * 1e-9;
+  
 
   // Load raw pose, which is the pose of the pose sensor wrt a given world
   // frame.
@@ -230,6 +231,7 @@ void ASLRGBDOfflineStream::get(uint32_t* id, double* time,
 
   Eigen::Quaterniond q_cam_in_world = q_body_in_world * q_cam_in_body_;
   Eigen::Vector3d t_cam_in_world = q_body_in_world * t_cam_in_body_ + t_body_in_world;
+  // ROS_INFO("here?");
 
   // Convert poses to optical coordinates.
   switch (world_frame_) {
@@ -274,6 +276,7 @@ void ASLRGBDOfflineStream::get(uint32_t* id, double* time,
       return;
   }
 
+  // ROS_INFO("not really!");
   // Load RGB.
   bfs::path rgb_path = bfs::path(rgb_data_.path()) / bfs::path("data") /
       bfs::path(rgb_data_[rgb_idxs_[curr_idx_]].filename);

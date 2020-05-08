@@ -1,7 +1,11 @@
 # flame_offline parameters.
-pose_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/state_groundtruth_estimate0
-rgb_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/cam0
-depth_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/depthmap0
+# pose_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/state_groundtruth_estimate0
+# rgb_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/cam0
+# depth_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/depthmap0
+pose_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/state_groundtruth_estimate0
+rgb_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/cam0
+depth_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/depthmap0
+
 world_frame: RFU
 
 input:
@@ -13,16 +17,16 @@ input:
 
   # Target rate at which to process images. This allows ROS to clear the
   # callback queues so that things get bagged.
-  rate: 30
+  rate: 10 # 30 
 
 output:
   quiet: false # Turn off terminal output.
   mesh: true # Publish mesh as pcl_msgs/PolygonMesh.
   idepthmap: false # Publish idepthmap as sensor_msgs/Image.
   depthmap: false # Publish depthmap as sensor_msgs/Image.
-  cloud: false # Publish pointcloud sensor_msgs/PointCloud2. Prefer mesh or depthmap (in that order).
+  cloud: true # false Publish pointcloud sensor_msgs/PointCloud2. Prefer mesh or depthmap (in that order).
   features: false # Publish raw features points as sensors_msgs/Image.
-  stats: true # Publish statistics message.
+  stats: false # true Publish statistics message.
 
   # Integrate load measurements over this many frames before reporting. Timing
   # resolution of /proc is only a Jiffy (usually 0.01 sec), so querying faster
@@ -58,8 +62,8 @@ output:
 debug:
   wireframe: true # Mesh wireframe colored by idepth.
   features: true # Features colored by idepth.
-  detections: false # Feature detections
-  matches: false # Epipolar line searches (green success, red failure).
+  detections: true #false # Feature detections
+  matches: true #false # Epipolar line searches (green success, red failure).
   normals: false # Image colored by interpolated normal vectors.
   idepthmap: true # Colored idepthmap.
   text_overlay: true # Draw text overlays on images.

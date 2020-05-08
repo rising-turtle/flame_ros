@@ -410,6 +410,7 @@ class FlameOffline final {
     /*==================== Enter main loop ====================*/
     ros::Rate ros_rate(rate_);
     ROS_INFO_COND(!params_.debug_quiet, "Done. We are GO for launch!\n");
+    bool once = true; 
     while (ros::ok() && !input_->empty()) {
       stats_.tick("main");
 
@@ -422,6 +423,10 @@ class FlameOffline final {
       cv::Mat1f depth;
       Eigen::Quaterniond q;
       Eigen::Vector3d t;
+      if(once){
+        sleep(1); 
+        once = false;
+      }
       input_->get(&img_id, &time, &rgb, &depth, &q, &t);
       stats_.tock("waiting");
       ROS_INFO_COND(!params_.debug_quiet,
@@ -573,6 +578,7 @@ class FlameOffline final {
       std::vector<flame::Triangle> triangles;
       std::vector<flame::Edge> edges;
       std::vector<bool> tri_validity;
+      ROS_INFO("flame_offline_asl.cc: publishing PolygonMesh!");
       sensor_->getInverseDepthMesh(&vtx, &idepths, &normals, &triangles,
                                    &tri_validity, &edges);
       publishDepthMesh(mesh_pub_, camera_frame_id_, time, Kinv_, vtx,

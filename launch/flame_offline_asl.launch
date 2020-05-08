@@ -15,6 +15,8 @@
     <rosparam command="load" if="$(arg load_params)"
               file="$(find flame_ros)/cfg/$(arg param_file)"/>
   </node>
+  
+  <node pkg="rviz" type="rviz" name="rviz" args="-d rvio_rviz.rviz"/>
 
   <!-- Bag the outputs. -->
   <node if="$(arg bag_data)"
