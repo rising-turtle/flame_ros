@@ -2,17 +2,20 @@
 # pose_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/state_groundtruth_estimate0
 # rgb_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/cam0
 # depth_path: /home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/depthmap0
-pose_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/state_groundtruth_estimate0
-rgb_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/cam0
+# pose_path: /home/davidz/work/data/struct_core_v2/short1/trajectory
+# rgb_path: /home/davidz/work/data/struct_core_v2/short1/cam0
+pose_path: /home/davidz/work/data/struct_core_v2/corridor5/trajectory
+rgb_path: /home/davidz/work/data/struct_core_v2/corridor5/cam0
 depth_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/depthmap0
 
-world_frame: RFU
+# world_frame: RFU
+world_frame: FLU
 
 input:
   camera_frame_id: camera
   camera_world_frame_id: camera_world
   subsample_factor: 1 # Process one out of this many images.
-  poseframe_subsample_factor: 3 # 6 Create pf every this number of images.
+  poseframe_subsample_factor: 6 # Create pf every this number of images.
   resize_factor: 1 # Downsample image width/height by this factor.
 
   # Target rate at which to process images. This allows ROS to clear the
