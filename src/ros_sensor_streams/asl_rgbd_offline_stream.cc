@@ -151,8 +151,8 @@ ASLRGBDOfflineStream::ASLRGBDOfflineStream(ros::NodeHandle& nh,
 
 void ASLRGBDOfflineStream::associateData() {
   auto diff = [](const dua::FileData& x, const dua::PoseData& y) {
-    double tx = static_cast<double>(x.timestamp) * 1e-9;
-    double ty = static_cast<double>(y.timestamp) * 1e-9;
+    double tx = static_cast<double>(x.timestamp) * 1e-9; // 1e-9
+    double ty = static_cast<double>(y.timestamp) * 1e-9; // 1e-9
     return std::fabs(tx - ty);
   };
 
@@ -269,6 +269,17 @@ void ASLRGBDOfflineStream::get(uint32_t* id, double* time,
       Eigen::Quaterniond q_rfu_to_rdf(R_rfu_to_rdf);
       *quat = q_rfu_to_rdf * q_cam_in_world;
       *trans = q_rfu_to_rdf * t_cam_in_world;
+      break;
+    }case ULB:{
+      // Local RDF frame in global ULB frame.
+      Eigen::Matrix3d R_frd_to_ulb;
+      R_frd_to_ulb << 0.0, -1.0, 0.0,
+          -1.0, 0.0, 0.0,
+          0.0, 0.0, -1.0;
+
+      Eigen::Quaterniond q_frd_to_ulb(R_frd_to_ulb);
+      *quat = q_frd_to_ulb * q_cam_in_world;
+      *trans = q_frd_to_ulb * t_cam_in_world;
       break;
     }
     default:

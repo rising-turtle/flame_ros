@@ -134,6 +134,8 @@ class FlameOffline final {
       world_frame = ros_sensor_streams::ASLRGBDOfflineStream::WorldFrame::FRD;
     } else if (world_frame_str == "RFU") {
       world_frame = ros_sensor_streams::ASLRGBDOfflineStream::WorldFrame::RFU;
+    } else if(world_frame_str == "ULB") {
+      world_frame = ros_sensor_streams::ASLRGBDOfflineStream::WorldFrame::ULB;
     } else {
       ROS_ERROR("Unknown world frame!\n");
       return;

@@ -75,6 +75,8 @@ class ASLRGBDOfflineStream final  {
          // global FRD frame.
     RFU, // Pose is the transform from the local RDF frame attached to the
          // camera to the global RFU frame.
+    ULB, // Pose is the transform from the local RDF frame attached to the
+         // camera to the global ULB frame.
   };
 
   /**
