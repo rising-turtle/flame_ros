@@ -28,11 +28,11 @@ output:
   quiet: false # Turn off terminal output.
   mesh: true # Publish mesh as pcl_msgs/PolygonMesh.
   idepthmap: false # Publish idepthmap as sensor_msgs/Image.
-  depthmap: false # Publish depthmap as sensor_msgs/Image.
+  depthmap: true # Publish depthmap as sensor_msgs/Image.
   cloud: true # false Publish pointcloud sensor_msgs/PointCloud2. Prefer mesh or depthmap (in that order).
   features: false # Publish raw features points as sensors_msgs/Image.
   stats: false # true Publish statistics message.
-
+  save_depth: true # whether to save depth image 
   # Integrate load measurements over this many frames before reporting. Timing
   # resolution of /proc is only a Jiffy (usually 0.01 sec), so querying faster
   # than this is not meaningful.

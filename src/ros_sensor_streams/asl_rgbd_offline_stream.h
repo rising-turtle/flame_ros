@@ -134,7 +134,8 @@ class ASLRGBDOfflineStream final  {
 
   const std::string& camera_frame_id() const { return camera_frame_id_; }
 
- private:
+ // private:
+public:
   // Associate datasets so that each timestamp has one piece of data.
   void associateData();
 

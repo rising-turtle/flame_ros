@@ -30,6 +30,7 @@
 #include <memory>
 #include <limits>
 #include <vector>
+#include <string>
 
 #include <boost/filesystem.hpp>
 
@@ -39,6 +40,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp> 
 
 #include <ros/ros.h>
 
@@ -66,6 +68,8 @@
 
 namespace bfs = boost::filesystem;
 namespace fu = flame::utils;
+
+using namespace std;
 
 /**
  * @brief Signal handler to debug crashes.
@@ -153,6 +157,9 @@ class FlameOffline final {
     getParamOrFail(pnh_, "input/rate", &rate_);
 
     /*==================== Output Params ====================*/
+    save_depth_image = false; 
+    pnh_.param("output/save_depth", save_depth_image, save_depth_image); 
+
     getParamOrFail(pnh_, "output/quiet", &params_.debug_quiet);
     getParamOrFail(pnh_, "output/mesh", &publish_mesh_);
     getParamOrFail(pnh_, "output/idepthmap", &publish_idepthmap_);
@@ -600,17 +607,27 @@ class FlameOffline final {
       // Convert to depths.
       cv::Mat1f depth_est(idepthmap.rows, idepthmap.cols,
                           std::numeric_limits<float>::quiet_NaN());
+         // Convert to depths.
+      cv::Mat1w depth_est_us(idepthmap.rows, idepthmap.cols, (unsigned short)0);
 #pragma omp parallel for collapse(2) num_threads(params_.omp_num_threads) schedule(dynamic, params_.omp_chunk_size) // NOLINT
       for (int ii = 0; ii < depth_est.rows; ++ii) {
         for (int jj = 0; jj < depth_est.cols; ++jj) {
           float idepth =  idepthmap(ii, jj);
           if (!std::isnan(idepth) && (idepth > 0)) {
             depth_est(ii, jj) = 1.0f/ idepth;
+            depth_est_us(ii, jj) = 1000 * depth_est(ii, jj);
           }
         }
       }
 
+      if (save_depth_image){
+        string img_name = input_->rgb_data_.path()+"/data/dpt_" + input_->rgb_data_[input_->rgb_idxs_[img_id]].filename; 
+        printf("flame_offline_asl.cc: save depth image at %s\n", img_name.c_str());
+        cv::imwrite(img_name.c_str(), depth_est_us);
+      }
+
       if (publish_depthmap_) {
+
         publishDepthMap(depth_pub_, camera_frame_id_, time, input_->K(),
                         depth_est);
       }
@@ -782,6 +799,7 @@ class FlameOffline final {
   bool publish_idepthmap_;
   bool publish_depthmap_;
   bool publish_features_;
+  bool save_depth_image;
   image_transport::CameraPublisher idepth_pub_;
   image_transport::CameraPublisher depth_pub_;
   image_transport::CameraPublisher features_pub_;
