@@ -69,6 +69,13 @@ install(TARGETS flame_offline_asl
 add_dependencies(flame_offline_asl
   ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(point_cloud_mapping point_cloud_mapping.cc)
+target_link_libraries(point_cloud_mapping  
+  ${OpenCV_LIBS}
+  ${PCL_LIBRARIES}
+  ${catkin_LIBRARIES})
+
+
 if (FLAME_WITH_RVIZ)
   ## Here we specify which header files need to be run through "moc",
   ## Qt's meta-object compiler.
