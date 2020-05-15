@@ -177,17 +177,21 @@ void do_it()
           // voxel filtering 
           *global_pc += *pwi; 
           {
-            CloudLPtr tmp(new CloudL); 
-            filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
-            global_pc.swap(tmp);
+           //  CloudLPtr tmp(new CloudL); 
+           // filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
+           // global_pc.swap(tmp);
 
-            if(++cnt%3 == 0){
+            if((++cnt)%5 == 0){
               if(global_pc->points.size() > 0){
+                CloudLPtr tmp(new CloudL); 
+                filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
                 // save 
                 stringstream ss; 
                 ss <<"./tmp_pc/"<<cnt<<".pcd"; 
-                pcl::io::savePCDFile(ss.str(), *global_pc); 
-                CloudLPtr tmp(new CloudL); 
+                pcl::io::savePCDFile(ss.str(), *tmp); 
+                // CloudLPtr tmp(new CloudL); 
+                // global_pc.swap(tmp);
+                tmp.reset(new CloudL);
                 global_pc.swap(tmp);
               }
             }
@@ -281,7 +285,7 @@ void generatePointCloud(cv::Mat& rgb, cv::Mat& depth, int skip, pcl::PointCloud<
   }
   
   int color_idx; 
-  char red_idx = 0, green_idx =1, blue_idx = 2;
+  char red_idx = 2, green_idx =1, blue_idx = 0;
 
   int sv, su, ev, eu; 
   // Point pt; 
@@ -353,6 +357,7 @@ bool readImgFiles(std::vector<long long>& vt, std::vector<string>& v_rgb, std::v
   		// string file_name = rgb_s.substr(found+1);  
   		// string dpt_s = path + "/dpt_" + file_name; 
       string dpt_s = "dpt_" + rgb_s; 
+      // string dpt_s = "feat_dpt_" + rgb_s; 
   		// printf("point_cloud_mapping.cc: timestamp %ld, rgb_s: %s dpt_s: %s\n", timestamp, rgb_s.c_str(), dpt_s.c_str()); 
       // printf("point_cloud_mapping.cc: timestamp %ld, rgb_s: %s dpt_s: \n", timestamp, rgb_s.c_str()); 
       // printf("point_cloud_mapping.cc: timestamp %ld \n", timestamp); 

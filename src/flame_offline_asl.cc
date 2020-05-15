@@ -158,7 +158,9 @@ class FlameOffline final {
 
     /*==================== Output Params ====================*/
     save_depth_image = false; 
+    save_feat_depth_image = false;
     pnh_.param("output/save_depth", save_depth_image, save_depth_image); 
+    pnh_.param("output/save_feat_depth", save_feat_depth_image, save_feat_depth_image); 
 
     getParamOrFail(pnh_, "output/quiet", &params_.debug_quiet);
     getParamOrFail(pnh_, "output/mesh", &publish_mesh_);
@@ -188,6 +190,13 @@ class FlameOffline final {
     double edge_length_thresh;
     getParamOrFail(pnh_, "output/edge_length_thresh", &edge_length_thresh);
     params_.edge_length_thresh = edge_length_thresh;
+
+    // 3d edge threshold 
+    // getParamOrFail(pnh_, "output/filter_long_3d_edges",
+    //               &params_.do_edge_length_3d_filter);
+
+    pnh_.param("output/filter_long_3d_edges", params_.do_edge_length_3d_filter, params_.do_edge_length_3d_filter); 
+    pnh_.param("output/edge_length_3d_thresh", params_.edge_length_3d_thresh, params_.edge_length_3d_thresh); 
 
     getParamOrFail(pnh_, "output/filter_triangles_by_idepth",
                    &params_.do_idepth_triangle_filter);
@@ -643,6 +652,8 @@ class FlameOffline final {
     if (publish_features_) {
       cv::Mat1f depth_raw(img_gray.rows, img_gray.cols,
                           std::numeric_limits<float>::quiet_NaN());
+      cv::Mat1w feat_depth_raw(img_gray.rows, img_gray.cols,
+                           (unsigned short)0);
       if (publish_features_) {
         std::vector<cv::Point2f> vertices;
         std::vector<float> idepths_mu, idepths_var;
@@ -661,12 +672,19 @@ class FlameOffline final {
             FLAME_ASSERT(y < depth_raw.rows);
 
             depth_raw(y, x) = 1.0f / id;
+            feat_depth_raw(y,x) = (unsigned short)((1.0f / id)*1000); 
           }
         }
       }
 
       publishDepthMap(features_pub_, camera_frame_id_, time, input_->K(),
                       depth_raw);
+      if (save_feat_depth_image){
+        string img_name = input_->rgb_data_.path()+"/data/feat_dpt_" + input_->rgb_data_[input_->rgb_idxs_[img_id]].filename; 
+        printf("flame_offline_asl.cc: save feats depth image at %s\n", img_name.c_str());
+        cv::imwrite(img_name.c_str(), feat_depth_raw);
+      }
+
     }
 
     if (publish_stats_) {
@@ -800,6 +818,7 @@ class FlameOffline final {
   bool publish_depthmap_;
   bool publish_features_;
   bool save_depth_image;
+  bool save_feat_depth_image; 
   image_transport::CameraPublisher idepth_pub_;
   image_transport::CameraPublisher depth_pub_;
   image_transport::CameraPublisher features_pub_;

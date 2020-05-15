@@ -29,10 +29,11 @@ output:
   mesh: true # Publish mesh as pcl_msgs/PolygonMesh.
   idepthmap: false # Publish idepthmap as sensor_msgs/Image.
   depthmap: true # Publish depthmap as sensor_msgs/Image.
-  cloud: true # false Publish pointcloud sensor_msgs/PointCloud2. Prefer mesh or depthmap (in that order).
+  cloud: false # false Publish pointcloud sensor_msgs/PointCloud2. Prefer mesh or depthmap (in that order).
   features: false # Publish raw features points as sensors_msgs/Image.
   stats: false # true Publish statistics message.
   save_depth: true # whether to save depth image 
+  save_feat_depth: false # whether to save feature's depth image (raw depth)
   # Integrate load measurements over this many frames before reporting. Timing
   # resolution of /proc is only a Jiffy (usually 0.01 sec), so querying faster
   # than this is not meaningful.
@@ -55,6 +56,10 @@ output:
   # underlying graph - it only affects the output/display.
   filter_long_edges: True
   edge_length_thresh: 0.333 # As a fraction of image width.
+
+  # Filter out triangles with long 3d edges for display 
+  filter_long_3d_edges: True
+  edge_length_3d_thresh: 0.24 
 
   # Filter out triangles that are far from the camera for display. This does not
   # change the underlying graph - it only affects the output/display.
