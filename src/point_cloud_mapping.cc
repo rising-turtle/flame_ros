@@ -81,9 +81,21 @@ Eigen::Vector3d tu2c;
 
 double CX, CY, FX, FY; 
 
-string img_path("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0/data"); 
-string img_fileindex("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0/data.csv"); 
-string pose_filename("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/trajectory/data.csv"); 
+// string img_path("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0/data"); 
+// string img_fileindex("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0/data.csv"); 
+// string pose_filename("/home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/trajectory/data.csv"); 
+
+// string img_path("/home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/cam0/data"); 
+// string img_fileindex("/home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/cam0/data.csv"); 
+// string pose_filename("/home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/trajectory/data.csv"); 
+
+// string img_path("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0/data"); 
+// string img_fileindex("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0/data.csv"); 
+// string pose_filename("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/trajectory/data.csv"); 
+
+string img_path("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data"); 
+string img_fileindex("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data.csv"); 
+string pose_filename("/home/davidz/work/data/euroc/V1_01_easy/mav0/state_groundtruth_estimate0/data.csv"); 
 
 int main(int argc, char* argv[])
 {
@@ -145,7 +157,7 @@ void do_it()
 
       trajItem& pose_i = v_traj[i]; 
 
-      for(;j<v_timestamp.size(); j++){
+      for(j=0;j<v_timestamp.size(); j++){
 
         if(v_timestamp[j] == pose_i.timestamp){
 
@@ -181,7 +193,7 @@ void do_it()
            // filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
            // global_pc.swap(tmp);
 
-            if((++cnt)%5 == 0){
+            if((++cnt)%2 == 0){
               if(global_pc->points.size() > 0){
                 CloudLPtr tmp(new CloudL); 
                 filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
@@ -228,7 +240,8 @@ void do_it()
 void set_param()
 {
   // TODO: use config file set parameters 
-  Tu2c<< 0., -1, 0, 0.092, 
+  // iphone SE
+  /*Tu2c<< 0., -1, 0, 0.092, 
         -1, 0, 0, 0.01,
         0, -0, -1, 0.,
         0, 0, 0, 1.;
@@ -239,7 +252,36 @@ void set_param()
   CX = 320.6716; 
   CY = 227.0487;
   FX = 515.8693;
-  FY = 515.8693;
+  FY = 515.8693;*/
+
+  // ARKit 
+  /* Tu2c<< 1., 0, 0, 0., 
+        0, -1, 0, 0.,
+        0, 0, -1, 0.,
+        0, 0, 0, 1.;
+
+  Ru2c = Tu2c.block<3,3>(0,0);
+  tu2c = Tu2c.block<3,1>(0,3); 
+
+  CX = 953.742798; 
+  CY = 700.477966;
+  FX = 1575.418945;
+  FY = 1575.418945;*/
+
+  // euroc dataset
+  Tu2c<< 0.0148655429818, -0.999880929698, 0.00414029679422, -0.0216401454975,
+         0.999557249008, 0.0149672133247, 0.025715529948, -0.064676986768,
+        -0.0257744366974, 0.00375618835797, 0.999660727178, 0.00981073058949,
+         0.0, 0.0, 0.0, 1.0;
+
+  Ru2c = Tu2c.block<3,3>(0,0);
+  tu2c = Tu2c.block<3,1>(0,3); 
+
+  CX = 367.215; 
+  CY = 248.375;
+  FX = 458.654;
+  FY = 457.296;
+
 }
 
 void transformPointCloud(trajItem& pi, pcl::PointCloud<pcl::PointXYZRGB>& pc_loc, pcl::PointCloud<pcl::PointXYZRGB>& pc_glo)
@@ -307,6 +349,7 @@ void generatePointCloud(cv::Mat& rgb, cv::Mat& depth, int skip, pcl::PointCloud<
   {
     z = depth.at<unsigned short>((v), (u))*0.001;
     if(std::isnan(z) || z <= 0.0 || z >= 4.0) continue; 
+    // if(std::isnan(z) || z <= 0.0 || z >= 2.4) continue; 
     // m_cam_model.convertUVZ2XYZ(u, v, z, px, py, pz); 
     px = (u - CX) / FX * z; 
     py = (v - CY) / FY * z; 
@@ -341,6 +384,8 @@ bool readImgFiles(std::vector<long long>& vt, std::vector<string>& v_rgb, std::v
   	v_rgb.clear(); 
   	v_dpt.clear(); 
 
+    string s; 
+    getline(inf, s);
   	while(!inf.eof()){
   		string s; 
   		getline(inf, s); 
@@ -350,7 +395,8 @@ bool readImgFiles(std::vector<long long>& vt, std::vector<string>& v_rgb, std::v
   		std::string::size_type sz = 0;
   		long long timestamp = std::stoll(s, &sz, 0); 
   		string rgb_s = s.substr(sz+1); // skip comma 
-      rgb_s = rgb_s.substr(0, rgb_s.size()-2); // remove \r \n 
+      // rgb_s = rgb_s.substr(0, rgb_s.size()-2); // remove \r \n 
+      rgb_s = rgb_s.substr(0, rgb_s.size()-1); // remove \r \n 
 
   		// std::size_t found = rgb_s.find_last_of("/\\");
   		// string path = rgb_s.substr(0, found);
@@ -361,7 +407,7 @@ bool readImgFiles(std::vector<long long>& vt, std::vector<string>& v_rgb, std::v
   		// printf("point_cloud_mapping.cc: timestamp %ld, rgb_s: %s dpt_s: %s\n", timestamp, rgb_s.c_str(), dpt_s.c_str()); 
       // printf("point_cloud_mapping.cc: timestamp %ld, rgb_s: %s dpt_s: \n", timestamp, rgb_s.c_str()); 
       // printf("point_cloud_mapping.cc: timestamp %ld \n", timestamp); 
-//      cout<<"timestamp: "<<timestamp<<" rgb_s: "<<rgb_s<<" dpt_s: "<<dpt_s<<endl;
+      cout<<"timestamp: "<<timestamp<<" rgb_s: "<<rgb_s<<" dpt_s: "<<dpt_s<<endl;
 
   		vt.push_back(timestamp); 
   		v_rgb.push_back(rgb_s); 
@@ -385,6 +431,7 @@ bool readTraj(std::string f, vector<struct trajItem>& t)
   }
 
   char buf[4096]; 
+  inf.getline(buf, 4096);
   // char b[21]={0}; 
   while(inf.getline(buf, 4096)){
     trajItem ti; 

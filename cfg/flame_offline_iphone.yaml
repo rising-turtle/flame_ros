@@ -7,17 +7,24 @@
 # pose_path: /home/davidz/work/data/struct_core_v2/corridor5/trajectory
 # rgb_path: /home/davidz/work/data/struct_core_v2/corridor5/cam0
 depth_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/depthmap0
-rgb_path: /home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0
-pose_path: /home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/trajectory
+# rgb_path: /home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/cam0
+# pose_path: /home/davidz/work/data/phone/room_5_11/2020-05-11T17-26-00/trajectory
+
+# rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/cam0
+# pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/trajectory
+
+rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0
+pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/trajectory
 
 # world_frame: RFU
-world_frame: ULB # ULB #FLU
+# world_frame: ULB # ULB #FLU
+world_frame: RFU # ULB #FLU
 
 input:
   camera_frame_id: camera
   camera_world_frame_id: camera_world
-  subsample_factor: 1 # Process one out of this many images.
-  poseframe_subsample_factor: 6 # Create pf every this number of images.
+  subsample_factor: 3 # 1 Process one out of this many images.
+  poseframe_subsample_factor: 12 # 10 6 Create pf every this number of images.
   resize_factor: 1 # Downsample image width/height by this factor.
 
   # Target rate at which to process images. This allows ROS to clear the
@@ -48,9 +55,9 @@ output:
   # Filter out oblique triangles for display. This does not change the
   # underlying graph - it only affects the output/display.
   filter_oblique_triangles: True
-  oblique_normal_thresh: 1.57 # 1.39626 # 80 degress in radians.
-  oblique_idepth_diff_factor: 0.35 # Relative difference between max/min triangle idepth.
-  oblique_idepth_diff_abs: 0.1 # Absolute difference between max/min triangle idepth.
+  oblique_normal_thresh: 1.39626 #0.524 #1.57 # 1.39626 # 80 degress in radians.
+  oblique_idepth_diff_factor: 0.24 #0.25 # 0.25 0.35 Relative difference between max/min triangle idepth.
+  oblique_idepth_diff_abs: 0.05 # 0.1 Absolute difference between max/min triangle idepth.
 
   # Filter out triangles with long edges for display. This does not change the
   # underlying graph - it only affects the output/display.
@@ -58,8 +65,8 @@ output:
   edge_length_thresh: 0.333 # As a fraction of image width.
 
   # Filter out triangles with long 3d edges for display 
-  filter_long_3d_edges: True
-  edge_length_3d_thresh: 0.24 
+  filter_long_3d_edges: False
+  edge_length_3d_thresh: 0.5 
 
   # Filter out triangles that are far from the camera for display. This does not
   # change the underlying graph - it only affects the output/display.

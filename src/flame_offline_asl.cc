@@ -540,7 +540,7 @@ class FlameOffline final {
     bool is_poseframe = (img_id % poseframe_subsample_factor_) == 0;
     bool update_success = false;
     if (!pass_in_truth_) {
-      update_success = sensor_->update(time, img_id, pose, img_gray,
+       update_success = sensor_->update(time, img_id, pose, img_gray,
                                        is_poseframe);
     } else {
       // Convert true depth to idepth.
