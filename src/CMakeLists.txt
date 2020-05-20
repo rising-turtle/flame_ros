@@ -75,6 +75,12 @@ target_link_libraries(point_cloud_mapping
   ${PCL_LIBRARIES}
   ${catkin_LIBRARIES})
 
+add_executable(pcd_2_ply pcd_2_ply.cpp)
+target_link_libraries(pcd_2_ply  
+  ${OpenCV_LIBS}
+  ${PCL_LIBRARIES}
+  ${catkin_LIBRARIES})
+
 
 if (FLAME_WITH_RVIZ)
   ## Here we specify which header files need to be run through "moc",

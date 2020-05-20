@@ -13,8 +13,11 @@ depth_path: /home/davidz/work/data/euroc/V1_01_easy/mav0/depthmap0
 # rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/cam0
 # pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/trajectory
 
-rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0
-pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/trajectory
+# rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0
+# pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/trajectory
+
+rgb_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-17T19-20-59/cam0
+pose_path: /home/davidz/work/data/phone/ARkit_5_14/2020-05-17T19-20-59/trajectory
 
 # world_frame: RFU
 # world_frame: ULB # ULB #FLU
@@ -23,8 +26,8 @@ world_frame: RFU # ULB #FLU
 input:
   camera_frame_id: camera
   camera_world_frame_id: camera_world
-  subsample_factor: 3 # 1 Process one out of this many images.
-  poseframe_subsample_factor: 12 # 10 6 Create pf every this number of images.
+  subsample_factor: 1 # 1 Process one out of this many images.
+  poseframe_subsample_factor: 2 # 10 6 Create pf every this number of images.
   resize_factor: 1 # Downsample image width/height by this factor.
 
   # Target rate at which to process images. This allows ROS to clear the
@@ -70,7 +73,7 @@ output:
 
   # Filter out triangles that are far from the camera for display. This does not
   # change the underlying graph - it only affects the output/display.
-  filter_triangles_by_idepth: True
+  filter_triangles_by_idepth: false
   min_triangle_idepth: 0.01
 
   # Don't publish output if angular rate exceeds this threshold. Will be ignored if 0.

@@ -89,13 +89,13 @@ double CX, CY, FX, FY;
 // string img_fileindex("/home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/cam0/data.csv"); 
 // string pose_filename("/home/davidz/work/data/phone/ARkit_5_14/2020-05-14T22-53-56/trajectory/data.csv"); 
 
-// string img_path("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0/data"); 
-// string img_fileindex("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/cam0/data.csv"); 
-// string pose_filename("/home/davidz/work/data/phone/ARkit_5_14/2020-05-16T09-18-53/trajectory/data.csv"); 
+ string img_path("/home/davidz/work/data/phone/ARkit_5_14/2020-05-17T19-20-59/cam0/data"); 
+ string img_fileindex("/home/davidz/work/data/phone/ARkit_5_14/2020-05-17T19-20-59/cam0/data.csv"); 
+ string pose_filename("/home/davidz/work/data/phone/ARkit_5_14/2020-05-17T19-20-59/trajectory/data.csv"); 
 
-string img_path("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data"); 
-string img_fileindex("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data.csv"); 
-string pose_filename("/home/davidz/work/data/euroc/V1_01_easy/mav0/state_groundtruth_estimate0/data.csv"); 
+// string img_path("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data"); 
+// string img_fileindex("/home/davidz/work/data/euroc/V1_01_easy/mav0/cam0/data.csv"); 
+// string pose_filename("/home/davidz/work/data/euroc/V1_01_easy/mav0/state_groundtruth_estimate0/data.csv"); 
 
 int main(int argc, char* argv[])
 {
@@ -193,7 +193,7 @@ void do_it()
            // filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
            // global_pc.swap(tmp);
 
-            if((++cnt)%2 == 0){
+            if((++cnt)%5 == 0){
               if(global_pc->points.size() > 0){
                 CloudLPtr tmp(new CloudL); 
                 filterPointCloud<pcl::PointXYZRGB>(0.01, global_pc, tmp); 
@@ -255,7 +255,7 @@ void set_param()
   FY = 515.8693;*/
 
   // ARKit 
-  /* Tu2c<< 1., 0, 0, 0., 
+  Tu2c<< 1., 0, 0, 0., 
         0, -1, 0, 0.,
         0, 0, -1, 0.,
         0, 0, 0, 1.;
@@ -266,10 +266,10 @@ void set_param()
   CX = 953.742798; 
   CY = 700.477966;
   FX = 1575.418945;
-  FY = 1575.418945;*/
+  FY = 1575.418945;
 
   // euroc dataset
-  Tu2c<< 0.0148655429818, -0.999880929698, 0.00414029679422, -0.0216401454975,
+/*  Tu2c<< 0.0148655429818, -0.999880929698, 0.00414029679422, -0.0216401454975,
          0.999557249008, 0.0149672133247, 0.025715529948, -0.064676986768,
         -0.0257744366974, 0.00375618835797, 0.999660727178, 0.00981073058949,
          0.0, 0.0, 0.0, 1.0;
@@ -281,7 +281,7 @@ void set_param()
   CY = 248.375;
   FX = 458.654;
   FY = 457.296;
-
+*/
 }
 
 void transformPointCloud(trajItem& pi, pcl::PointCloud<pcl::PointXYZRGB>& pc_loc, pcl::PointCloud<pcl::PointXYZRGB>& pc_glo)
@@ -396,7 +396,7 @@ bool readImgFiles(std::vector<long long>& vt, std::vector<string>& v_rgb, std::v
   		long long timestamp = std::stoll(s, &sz, 0); 
   		string rgb_s = s.substr(sz+1); // skip comma 
       // rgb_s = rgb_s.substr(0, rgb_s.size()-2); // remove \r \n 
-      rgb_s = rgb_s.substr(0, rgb_s.size()-1); // remove \r \n 
+      // rgb_s = rgb_s.substr(0, rgb_s.size()-1); // remove \r \n 
 
   		// std::size_t found = rgb_s.find_last_of("/\\");
   		// string path = rgb_s.substr(0, found);
